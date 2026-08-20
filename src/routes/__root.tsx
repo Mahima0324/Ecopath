@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportEcoPathError } from "../lib/EcoPath-error-reporting";
+import { AuthProvider } from "@/hooks/useAuth";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -77,11 +79,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "EcoPath App" },
-      { name: "description", content: "EcoPath Generated Project" },
+      { title: "EcoPath — Pollution-aware smart route planner" },
+      {
+        name: "description",
+        content:
+          "EcoPath compares route alternatives by live air quality, time and distance so you can travel the cleanest way.",
+      },
       { name: "author", content: "EcoPath" },
-      { property: "og:title", content: "EcoPath App" },
-      { property: "og:description", content: "EcoPath Generated Project" },
+      { property: "og:title", content: "EcoPath — Pollution-aware smart route planner" },
+      {
+        property: "og:description",
+        content:
+          "Compare routes by live air quality, time and distance, and pick the healthiest way to get there.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@EcoPath" },
@@ -119,8 +129,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AuthProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
