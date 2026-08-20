@@ -19,9 +19,9 @@ interface RouteCardProps {
   route: AnalyzedRoute;
   selected: boolean;
   onSelect: () => void;
-  onSave?: () => void;
-  saving?: boolean;
-  saved?: boolean;
+  onSave?: (() => void) | undefined;
+  saving?: boolean | undefined;
+  saved?: boolean | undefined;
 }
 
 export function RouteCard({ route, selected, onSelect, onSave, saving, saved }: RouteCardProps) {
