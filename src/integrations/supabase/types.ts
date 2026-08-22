@@ -17,20 +17,35 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          home_city: string | null
           id: string
+          max_extra_minutes: number | null
           name: string
+          onboarded: boolean
+          prefer_cleaner: string
+          sensitivity: string
           updated_at: string
         }
         Insert: {
           created_at?: string
+          home_city?: string | null
           id: string
+          max_extra_minutes?: number | null
           name?: string
+          onboarded?: boolean
+          prefer_cleaner?: string
+          sensitivity?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
+          home_city?: string | null
           id?: string
+          max_extra_minutes?: number | null
           name?: string
+          onboarded?: boolean
+          prefer_cleaner?: string
+          sensitivity?: string
           updated_at?: string
         }
         Relationships: []
@@ -42,10 +57,12 @@ export type Database = {
           chosen_distance_m: number
           chosen_duration_s: number
           chosen_pollution_category: string | null
+          chosen_route_kind: string | null
           created_at: string
           destination_label: string
           destination_lat: number
           destination_lon: number
+          eco_score: number | null
           id: string
           origin_label: string
           origin_lat: number
@@ -60,10 +77,12 @@ export type Database = {
           chosen_distance_m: number
           chosen_duration_s: number
           chosen_pollution_category?: string | null
+          chosen_route_kind?: string | null
           created_at?: string
           destination_label: string
           destination_lat: number
           destination_lon: number
+          eco_score?: number | null
           id?: string
           origin_label: string
           origin_lat: number
@@ -78,16 +97,48 @@ export type Database = {
           chosen_distance_m?: number
           chosen_duration_s?: number
           chosen_pollution_category?: string | null
+          chosen_route_kind?: string | null
           created_at?: string
           destination_label?: string
           destination_lat?: number
           destination_lon?: number
+          eco_score?: number | null
           id?: string
           origin_label?: string
           origin_lat?: number
           origin_lon?: number
           picked_lower_pollution?: boolean
           travel_mode?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_places: {
+        Row: {
+          address: string
+          created_at: string
+          id: string
+          label: string
+          lat: number
+          lon: number
+          user_id: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          id?: string
+          label: string
+          lat: number
+          lon: number
+          user_id: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          id?: string
+          label?: string
+          lat?: number
+          lon?: number
           user_id?: string
         }
         Relationships: []
