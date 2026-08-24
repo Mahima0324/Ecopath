@@ -5,7 +5,9 @@ import { useEffect } from "react";
 import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
 
 import { aqiCategory } from "@/lib/ecopath/aqi";
-import type { AnalyzedRoute, NamedPlace } from "@/lib/ecopath/types";
+import { formatDistance, formatDuration } from "@/lib/ecopath/format";
+import { ROAD_LABEL } from "@/lib/ecopath/roads";
+import type { AnalyzedRoute, NamedPlace, PollutionLevel } from "@/lib/ecopath/types";
 
 const AQI_COLORS: { max: number; color: string }[] = [
   { max: 50, color: "#3fae6b" },
@@ -15,6 +17,12 @@ const AQI_COLORS: { max: number; color: string }[] = [
   { max: 300, color: "#8e44ad" },
   { max: Infinity, color: "#7b241c" },
 ];
+
+const LEVEL_COLOR: Record<PollutionLevel, string> = {
+  LOW: "#0f9d78",
+  MODERATE: "#e6b422",
+  HIGH: "#d5453c",
+};
 
 function aqiColor(aqi: number | null) {
   if (aqi == null) return "#94a3b8";
@@ -56,9 +64,8 @@ export default function RouteMap({ origin, destination, routes, selectedId, onSe
     (origin.lon + destination.lon) / 2,
   ];
 
-  const ordered = [...routes].sort((a, b) =>
-    a.id === selectedId ? 1 : b.id === selectedId ? -1 : 0,
-  );
+  const ordered = [...routes].sort((a, b) => (a.id === selectedId ? 1 : b.id === selectedId ? -1 : 0));
+  const selected = routes.find((r) => r.id === selectedId);
 
   return (
     <MapContainer center={center} zoom={12} scrollWheelZoom className="h-full w-full">
@@ -69,48 +76,66 @@ export default function RouteMap({ origin, destination, routes, selectedId, onSe
       <FitBounds routes={routes} />
 
       {ordered.map((route) => {
-        const selected = route.id === selectedId;
+        const isSelected = route.id === selectedId;
         return (
           <Polyline
             key={route.id}
             positions={route.geometry}
             pathOptions={{
-              color: selected ? "#0f9d78" : "#64748b",
-              weight: selected ? 7 : 4,
-              opacity: selected ? 0.95 : 0.45,
-              dashArray: route.recommended ? undefined : selected ? undefined : "6 8",
+              color: LEVEL_COLOR[route.pollutionLevel],
+              weight: isSelected ? 7 : 4,
+              opacity: isSelected ? 0.95 : 0.4,
+              dashArray: isSelected ? undefined : "6 8",
             }}
             eventHandlers={{ click: () => onSelect(route.id) }}
-          />
+          >
+            <Popup>
+              <div className="space-y-1 text-xs">
+                <div className="text-sm font-semibold">{route.name}</div>
+                <div>
+                  {formatDuration(route.durationSeconds)} · {formatDistance(route.distanceMeters)}
+                </div>
+                <div>
+                  Pollution exposure: <strong>{route.pollutionLevel}</strong>
+                  {route.aqiExposure != null && ` (AQI ${Math.round(route.aqiExposure)})`}
+                </div>
+                <div>Estimated traffic: {route.trafficLevel}</div>
+                {route.roadComposition.map((row) => (
+                  <div key={row.roadClass}>
+                    {ROAD_LABEL[row.roadClass]}: {formatDistance(row.distanceMeters)} (
+                    {Math.round(row.share * 100)}%)
+                  </div>
+                ))}
+              </div>
+            </Popup>
+          </Polyline>
         );
       })}
 
-      {routes
-        .find((r) => r.id === selectedId)
-        ?.samples.map((sample, i) => (
-          <CircleMarker
-            key={`${selectedId}-${i}`}
-            center={[sample.lat, sample.lon]}
-            radius={7}
-            pathOptions={{
-              color: "#ffffff",
-              weight: 2,
-              fillColor: aqiColor(sample.aqi),
-              fillOpacity: 0.95,
-            }}
-          >
-            <Popup>
-              <div className="text-xs">
-                <div className="font-semibold">
-                  AQI {sample.aqi == null ? "unavailable" : Math.round(sample.aqi)}
-                </div>
-                <div>{aqiCategory(sample.aqi) ?? "No reading at this point"}</div>
-                {sample.pm25 != null && <div>PM2.5 {sample.pm25.toFixed(1)} µg/m³</div>}
-                {sample.pm10 != null && <div>PM10 {sample.pm10.toFixed(1)} µg/m³</div>}
+      {selected?.samples.map((sample, i) => (
+        <CircleMarker
+          key={`${selectedId}-${i}`}
+          center={[sample.lat, sample.lon]}
+          radius={7}
+          pathOptions={{
+            color: "#ffffff",
+            weight: 2,
+            fillColor: aqiColor(sample.aqi),
+            fillOpacity: 0.95,
+          }}
+        >
+          <Popup>
+            <div className="text-xs">
+              <div className="font-semibold">
+                AQI {sample.aqi == null ? "unavailable" : Math.round(sample.aqi)}
               </div>
-            </Popup>
-          </CircleMarker>
-        ))}
+              <div>{aqiCategory(sample.aqi) ?? "No reading at this point"}</div>
+              {sample.pm25 != null && <div>PM2.5 {sample.pm25.toFixed(1)} µg/m³</div>}
+              {sample.pm10 != null && <div>PM10 {sample.pm10.toFixed(1)} µg/m³</div>}
+            </div>
+          </Popup>
+        </CircleMarker>
+      ))}
 
       <Marker position={[origin.lat, origin.lon]} icon={pinIcon("Start", "#0f9d78")} />
       <Marker position={[destination.lat, destination.lon]} icon={pinIcon("End", "#d5453c")} />
