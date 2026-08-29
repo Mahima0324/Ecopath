@@ -8,8 +8,9 @@ import { Logo } from "./Logo";
 
 const NAV = [
   { to: "/planner", label: "Route planner" },
-  { to: "/learn", label: "Air quality" },
+  { to: "/air-quality", label: "Air quality" },
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/learn", label: "How it works" },
 ] as const;
 
 export function SiteHeader() {

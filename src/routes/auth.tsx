@@ -42,9 +42,11 @@ function AuthPage() {
 
   const isSignup = mode === "signup";
 
+  const [justSignedUp, setJustSignedUp] = useState(false);
+
   useEffect(() => {
-    if (!loading && user) void navigate({ to: "/dashboard" });
-  }, [user, loading, navigate]);
+    if (!loading && user) void navigate({ to: justSignedUp ? "/onboarding" : "/dashboard" });
+  }, [user, loading, navigate, justSignedUp]);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -57,7 +59,8 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success("Account created. You're all set!");
+        setJustSignedUp(true);
+        toast.success("Account created — let's personalise your routes.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;

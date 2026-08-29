@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bike, Gauge, LineChart, MapPinned, Route as RouteIcon, Wind } from "lucide-react";
 
+import { HeroRoutePreview } from "@/components/ecopath/HeroRoutePreview";
 import { PageShell } from "@/components/ecopath/PageShell";
 import { Button } from "@/components/ui/button";
 import { AQI_CATEGORY_GUIDE } from "@/lib/ecopath/aqi";
@@ -49,16 +50,17 @@ function Index() {
     <PageShell>
       <section className="relative overflow-hidden">
         <div className="bg-hero-glow pointer-events-none absolute inset-0" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:py-24 lg:grid-cols-[1.05fr_1fr]">
+          <div>
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-soft">
-            <Wind className="size-3.5 text-primary" /> Live air-quality routing
+            <Wind className="size-3.5 text-primary" /> AI-powered pollution-aware routing
           </span>
           <h1 className="mt-6 max-w-3xl font-display text-4xl leading-tight font-bold tracking-tight md:text-6xl">
             Take the route that's <span className="text-primary">easier to breathe</span>.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
-            The fastest way there is rarely the cleanest. EcoPath scores every alternative on live
-            pollution alongside time and distance, then tells you exactly why one route wins.
+            EcoPath compares routes using air quality, traffic, distance and travel time to help you choose
+            a route with lower pollution exposure.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -67,9 +69,11 @@ function Index() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/learn">How scoring works</Link>
+              <Link to="/learn">See how EcoPath works</Link>
             </Button>
           </div>
+
+
 
           <dl className="mt-14 grid max-w-2xl gap-6 sm:grid-cols-3">
             {[
@@ -83,6 +87,9 @@ function Index() {
               </div>
             ))}
           </dl>
+          </div>
+
+          <HeroRoutePreview />
         </div>
       </section>
 
