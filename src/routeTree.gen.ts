@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AirQualityRouteImport } from './routes/air-quality'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as PlannerRouteImport } from './routes/planner'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AirQualityRoute = AirQualityRouteImport.update({
+  id: '/air-quality',
+  path: '/air-quality',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -54,6 +60,7 @@ const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/air-quality': typeof AirQualityRoute
   '/auth': typeof AuthRoute
   '/learn': typeof LearnRoute
   '/planner': typeof PlannerRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/air-quality': typeof AirQualityRoute
   '/auth': typeof AuthRoute
   '/learn': typeof LearnRoute
   '/planner': typeof PlannerRoute
@@ -72,6 +80,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/air-quality': typeof AirQualityRoute
   '/auth': typeof AuthRoute
   '/learn': typeof LearnRoute
   '/planner': typeof PlannerRoute
@@ -81,13 +90,27 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/learn' | '/planner' | '/dashboard' | '/onboarding'
+    | '/'
+    | '/air-quality'
+    | '/auth'
+    | '/learn'
+    | '/planner'
+    | '/dashboard'
+    | '/onboarding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/learn' | '/planner' | '/dashboard' | '/onboarding'
+  to:
+    | '/'
+    | '/air-quality'
+    | '/auth'
+    | '/learn'
+    | '/planner'
+    | '/dashboard'
+    | '/onboarding'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/air-quality'
     | '/auth'
     | '/learn'
     | '/planner'
@@ -98,6 +121,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AirQualityRoute: typeof AirQualityRoute
   AuthRoute: typeof AuthRoute
   LearnRoute: typeof LearnRoute
   PlannerRoute: typeof PlannerRoute
@@ -117,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/air-quality': {
+      id: '/air-quality'
+      path: '/air-quality'
+      fullPath: '/air-quality'
+      preLoaderRoute: typeof AirQualityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -173,6 +204,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AirQualityRoute: AirQualityRoute,
   AuthRoute: AuthRoute,
   LearnRoute: LearnRoute,
   PlannerRoute: PlannerRoute,
