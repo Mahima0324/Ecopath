@@ -86,6 +86,9 @@ function Index() {
               </div>
             ))}
           </dl>
+          </div>
+
+          <HeroRoutePreview />
         </div>
       </section>
 
