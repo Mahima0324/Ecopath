@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bike, Gauge, LineChart, MapPinned, Route as RouteIcon, Wind } from "lucide-react";
 
+import { HeroRoutePreview } from "@/components/ecopath/HeroRoutePreview";
 import { PageShell } from "@/components/ecopath/PageShell";
 import { Button } from "@/components/ui/button";
 import { AQI_CATEGORY_GUIDE } from "@/lib/ecopath/aqi";
