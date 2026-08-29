@@ -317,3 +317,17 @@ export const getDashboardStats = createServerFn({ method: "POST" })
       })),
     };
   });
+
+/** Live air quality for a small grid of points around a location (area map). */
+export const getAreaAirQuality = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        points: z
+          .array(z.object({ lat: z.number().min(-90).max(90), lon: z.number().min(-180).max(180) }))
+          .min(1)
+          .max(25),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => fetchAirQuality(data.points));
