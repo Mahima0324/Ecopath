@@ -71,7 +71,7 @@ export default function RouteMap({ origin, destination, routes, selectedId, onSe
     <MapContainer center={center} zoom={12} scrollWheelZoom className="h-full w-full">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <FitBounds routes={routes} />
 
