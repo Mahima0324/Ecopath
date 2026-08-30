@@ -189,7 +189,12 @@ function DashboardPage() {
             )}
           </div>
 
-          <AiAssistantCard context={assistantContext} suggestions={DASHBOARD_QUESTIONS} />
+          <AiAssistantCard
+            context={assistantContext}
+            suggestions={DASHBOARD_QUESTIONS}
+            description="Ask about today's air quality, your commute, or how to lower your pollution exposure."
+          />
+
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
