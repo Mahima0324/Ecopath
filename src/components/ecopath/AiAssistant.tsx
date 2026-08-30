@@ -21,6 +21,19 @@ interface ChatMessage {
   content: string;
 }
 
+/** The model sometimes replies in markdown; render it as clean plain text. */
+function toPlainText(text: string) {
+  return text
+    .replace(/```[a-z]*\n?/gi, "")
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/^\s*[*-]\s+/gm, "• ")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/(^|[^*])\*(?!\s)([^*]+?)\*/g, "$1$2")
+    .replace(/`([^`]+)`/g, "$1")
+    .trim();
+}
+
+
 interface AiAssistantProps {
   /** Plain-text briefing describing the current trip / user profile. */
   context: string;
@@ -166,18 +179,19 @@ export function AiAssistant({
 export function AiAssistantCard({
   context,
   suggestions,
+  description = "Want to know how this route affects your pollution exposure, or which option suits you best?",
 }: {
   context: string;
   suggestions: string[];
+  description?: string;
 }) {
   return (
     <div className="rounded-2xl border border-primary/25 bg-primary/6 p-5">
       <p className="flex items-center gap-2 font-display text-base font-semibold">
         <Bot className="size-4 text-primary" /> Ask EcoPath AI
       </p>
-      <p className="mt-1.5 text-sm text-muted-foreground">
-        Want to know how this route affects your pollution exposure, or which option suits you best?
-      </p>
+      <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>
+
       <AiAssistant
         context={context}
         suggestions={suggestions}
