@@ -21,6 +21,19 @@ interface ChatMessage {
   content: string;
 }
 
+/** The model sometimes replies in markdown; render it as clean plain text. */
+function toPlainText(text: string) {
+  return text
+    .replace(/```[a-z]*\n?/gi, "")
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/^\s*[*-]\s+/gm, "• ")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/(^|[^*])\*(?!\s)([^*]+?)\*/g, "$1$2")
+    .replace(/`([^`]+)`/g, "$1")
+    .trim();
+}
+
+
 interface AiAssistantProps {
   /** Plain-text briefing describing the current trip / user profile. */
   context: string;
