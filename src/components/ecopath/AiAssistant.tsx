@@ -139,7 +139,7 @@ export function AiAssistant({
                     : "bg-surface text-surface-foreground",
                 )}
               >
-                {message.content}
+                {message.role === "assistant" ? toPlainText(message.content) : message.content}
               </div>
             </div>
           ))}
