@@ -1,18 +1,10 @@
-# Welcome to your EcoPath project
+# EcoPath — Pollution-Aware Smart Route Planner
 
-This project was built with [EcoPath](https://EcoPath.dev).
-
-## Build with EcoPath
-
-Open your project in the [EcoPath editor](https://EcoPath.dev) and keep building.
-
-- **Ship faster**: describe what you want to build and EcoPath handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in EcoPath is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into EcoPath, ready for your next prompt.
+EcoPath compares route alternatives by live air quality, travel time, distance, road type, and your personal pollution sensitivity, so you can travel the cleanest way.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
 git clone <this-repository-url>
@@ -27,3 +19,5 @@ npm run dev
 - TypeScript
 - React
 - Tailwind CSS
+- Leaflet / OpenStreetMap / OSRM routing
+- Open-Meteo air quality data
