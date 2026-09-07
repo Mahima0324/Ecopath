@@ -1,6 +1,6 @@
 import { Bot, Brain, Leaf, Route as RouteIcon, Send } from "lucide-react";
 
-import { AI_DEMO_THREAD, AI_SUGGESTIONS, ROAD_MIX_DEMO, SENSITIVITY_DEMO } from "@/lib/ecopath/landing";
+import { AI_SUGGESTIONS, ROAD_MIX_DEMO, SENSITIVITY_DEMO } from "@/lib/ecopath/landing";
 import { cn } from "@/lib/utils";
 
 import { Reveal, useInView } from "./Reveal";
