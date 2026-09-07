@@ -282,3 +282,5 @@
 }
 
 html { scroll-behavior: smooth; }
+
+@source inline("bg-aqi-good bg-aqi-moderate bg-aqi-unhealthy");

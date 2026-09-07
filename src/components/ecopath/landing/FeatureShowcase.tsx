@@ -192,4 +192,3 @@ export function FeatureShowcase() {
   );
 }
 
-export { AI_DEMO_THREAD };
