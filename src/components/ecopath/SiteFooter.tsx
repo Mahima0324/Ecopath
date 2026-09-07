@@ -2,43 +2,53 @@ import { Link } from "@tanstack/react-router";
 
 import { Logo } from "./Logo";
 
+const PRODUCT = [
+  { to: "/planner", label: "Route planner" },
+  { to: "/air-quality", label: "Air quality" },
+  { to: "/dashboard", label: "Dashboard" },
+  { to: "/learn", label: "How it works" },
+] as const;
+
+const LEGAL = [
+  { to: "/privacy", label: "Privacy" },
+  { to: "/terms", label: "Terms" },
+] as const;
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-14 md:grid-cols-[1.6fr_1fr_1fr]">
         <div>
           <Logo />
           <p className="mt-3 max-w-sm text-sm text-muted-foreground">
-            Pollution-aware route planning built on OpenStreetMap routing and live open air-quality
-            data. Estimates only — EcoPath does not provide medical advice.
+            Pollution-aware route planning for smarter everyday journeys. Estimates only — EcoPath does
+            not provide medical advice.
           </p>
         </div>
         <div>
           <h4 className="text-sm font-semibold">Product</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>
-              <Link to="/planner" className="transition-colors hover:text-foreground">
-                Route planner
-              </Link>
-            </li>
-            <li>
-              <Link to="/dashboard" className="transition-colors hover:text-foreground">
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/learn" className="transition-colors hover:text-foreground">
-                Air quality guide
-              </Link>
-            </li>
+            {PRODUCT.map((l) => (
+              <li key={l.to}>
+                <Link to={l.to} className="transition-colors hover:text-foreground">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold">Data sources</h4>
+          <h4 className="text-sm font-semibold">More</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+            {LEGAL.map((l) => (
+              <li key={l.to}>
+                <Link to={l.to} className="transition-colors hover:text-foreground">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
             <li>OpenStreetMap &amp; OSRM routing</li>
             <li>Open-Meteo air quality</li>
-            <li>Nominatim geocoding</li>
           </ul>
         </div>
       </div>
