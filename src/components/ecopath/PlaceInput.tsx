@@ -95,8 +95,9 @@ export function PlaceInput({ id, label, placeholder, value, onChange }: PlaceInp
             <p className="px-3 py-3 text-sm text-muted-foreground">No matching places found.</p>
           )}
           <ul className="max-h-64 overflow-y-auto">
-            {data?.map((place) => (
-              <li key={`${place.lat},${place.lon}`}>
+            {data?.map((place, index) => (
+              <li key={`${place.lat},${place.lon},${index}`}>
+
                 <button
                   type="button"
                   className="flex w-full items-start gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-secondary"
