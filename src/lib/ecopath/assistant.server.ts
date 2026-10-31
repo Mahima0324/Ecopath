@@ -1,7 +1,7 @@
-/** EcoPath AI assistant — server-only. Uses the EcoPath AI gateway. */
+/** EcoPath AI assistant — server-only. Uses Google Gemini API. */
 
-const GATEWAY = "https://ai.gateway.EcoPath.dev/v1/chat/completions";
-const MODEL = "google/gemini-3.7-flash";
+const GEMINI_API_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 export const ASSISTANT_SYSTEM_PROMPT = `You are EcoPath AI, an assistant inside a pollution-aware route planner.
 
@@ -28,36 +28,74 @@ export async function askAssistant(
   contextBlock: string,
   messages: AssistantMessage[],
 ): Promise<AssistantResult> {
-  const apiKey = process.env["EcoPath_API_KEY"];
-  if (!apiKey) throw new Error("The AI assistant is not configured.");
+  const apiKey = process.env["GEMINI_API_KEY"];
 
-  const res = await fetch(GATEWAY, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "EcoPath-API-Key": apiKey,
-      "X-EcoPath-AIG-SDK": "fetch",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        { role: "system", content: ASSISTANT_SYSTEM_PROMPT },
-        { role: "system", content: contextBlock },
-        ...messages,
+  if (!apiKey) {
+    throw new Error("The AI assistant is not configured.");
+  }
+
+  const contents = [
+    {
+      role: "user",
+      parts: [
+        {
+          text: `${ASSISTANT_SYSTEM_PROMPT}\n\nRoute context:\n${contextBlock}`,
+        },
       ],
-    }),
-  });
+    },
+    ...messages.map((message) => ({
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: message.content }],
+    })),
+  ];
 
-  if (res.status === 429) throw new Error("EcoPath AI is busy right now. Please try again in a moment.");
-  if (res.status === 402) throw new Error("EcoPath AI is out of credits. Please add credits to continue.");
+  const res = await fetch(
+    `${GEMINI_API_URL}?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents,
+        generationConfig: {
+          temperature: 0.4,
+          maxOutputTokens: 300,
+        },
+      }),
+    },
+  );
+
+  if (res.status === 429) {
+    throw new Error(
+      "EcoPath AI is busy right now. Please try again in a moment.",
+    );
+  }
+
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
-    console.error("AI gateway error", res.status, detail);
+    console.error("Gemini API error", res.status, detail);
     throw new Error("EcoPath AI could not answer that right now.");
   }
 
-  const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  const reply = json.choices?.[0]?.message?.content?.trim();
-  if (!reply) throw new Error("EcoPath AI returned an empty answer.");
+  const json = (await res.json()) as {
+    candidates?: {
+      content?: {
+        parts?: {
+          text?: string;
+        }[];
+      };
+    }[];
+  };
+
+  const reply = json.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text ?? "")
+    .join("")
+    .trim();
+
+  if (!reply) {
+    throw new Error("EcoPath AI returned an empty answer.");
+  }
+
   return { reply };
 }

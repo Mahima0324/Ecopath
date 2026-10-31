@@ -41,7 +41,7 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
         ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
         ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
       ];
-      const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in EcoPath Cloud.`;
+      const message = `Missing Supabase environment variable(s): ${missing.join(', ')}.`;
       console.error(`[Supabase] ${message}`);
       throw new Error(message);
     }
@@ -87,7 +87,7 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
           autoRefreshToken: false,
         },
       }
-    );
+    );c
 
     const { data, error } = await supabase.auth.getClaims(token);
     if (error || !data?.claims) {
